@@ -1,0 +1,16 @@
+build/
+*.o
+*.d
+ssm
+.DS_Store
+compile_commands.json
+
+# Never commit credentials
+*.key
+*.crt
+*.csr
+*.pem
+
+# Mission data
+*.opm
+*.ics
