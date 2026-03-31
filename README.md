@@ -117,18 +117,6 @@ $ ssm object-update --norad <catalog-number>
 
 ## OPM File Format
 
-The tool reads ExoLaunch deployment files. Each satellite entry looks like:
-
-```yaml
-- name: FrontierSat
-  sequence_number: 6
-  date: 2026-05-04T08:16:26.868Z
-  r_ecef_m: [2581455.807, 882726.275, 6313088.412]
-  v_ecef_m_per_s: [-5390.147, -4664.676, 2848.260]
-  hard_body_radius_m: 0.77
-  ballistic_coef_kg_per_m2: 121.50
-```
-
 Lines starting with `#` are comments. Multi-satellite files are supported;
 use `--name <satellite>` to select a specific entry (defaults to `FrontierSat`).
 
