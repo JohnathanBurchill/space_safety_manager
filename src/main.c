@@ -23,6 +23,7 @@
 #include "opm.h"
 #include "propagate.h"
 #include "state.h"
+#include "tle.h"
 #include "util.h"
 
 #include <cJSON.h>
@@ -66,7 +67,7 @@ static void usage(const char *progname)
             "      --step <seconds>\n"
             "      --type <hypothetical|definitive>\n"
             "  trajectories [--type <t>]         list trajectories for active object\n"
-            "  trajectory <id>                   get trajectory OEM data\n"
+            "  trajectory <id> [--export-tle]    get trajectory OEM; optionally write TLE\n"
             "  trajectory-meta <id>              get trajectory metadata\n"
             "\n"
             "-o N selects object by number (from object-show list).\n"
@@ -87,6 +88,16 @@ static const char *find_arg(int argc, char **argv, const char *flag, int start)
         }
     }
     return NULL;
+}
+
+static int has_flag(int argc, char **argv, const char *flag, int start)
+{
+    for (int i = start; i < argc; i++) {
+        if (strcmp(argv[i], flag) == 0) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 static void trim_input(char *buf)
@@ -946,9 +957,25 @@ int main(int argc, char **argv)
             fprintf(stderr, "trajectory: missing trajectory ID\n");
             result = 1;
         } else {
-            result = api_get_trajectory(&cfg, argv[cmd_idx + 1], &resp);
+            const char *traj_id = argv[cmd_idx + 1];
+            int export_tle = has_flag(argc, argv, "--export-tle", cmd_idx);
+            result = api_get_trajectory(&cfg, traj_id, &resp);
             if (result == 0) {
-                print_response(resp.data, pretty);
+                if (export_tle) {
+                    char name[128], id[64];
+                    utc_time_t epoch = {0};
+                    double r[3], v[3];
+                    if (tle_parse_oem_first(resp.data, name, sizeof name,
+                                            id, sizeof id, &epoch, r, v) == 0) {
+                        char path[512];
+                        tle_default_filename(id, &epoch, path, sizeof path);
+                        if (tle_write_from_state(name, id, &epoch, r, v, path) == 0) {
+                            fprintf(stderr, "Wrote TLE to %s\n", path);
+                        }
+                    }
+                } else {
+                    print_response(resp.data, pretty);
+                }
             }
         }
     } else if (strcmp(cmd, "trajectory-meta") == 0) {

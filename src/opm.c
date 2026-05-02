@@ -151,6 +151,19 @@ int opm_parse(const char *filename, const char *sat_name, opm_state_t *state)
             state->hard_body_radius = atof(val);
         } else if ((val = get_value(line, "ballistic_coef_kg_per_m2")) != NULL) {
             state->ballistic_coef = atof(val);
+        } else if ((val = get_value(line, "mean_perigee_altitude_km")) != NULL) {
+            state->mean_perigee_alt_km = atof(val);
+            state->has_mean_elements = 1;
+        } else if ((val = get_value(line, "mean_apogee_altitude_km")) != NULL) {
+            state->mean_apogee_alt_km = atof(val);
+        } else if ((val = get_value(line, "mean_inclination_deg")) != NULL) {
+            state->mean_inclination_deg = atof(val);
+        } else if ((val = get_value(line, "mean_argument_of_perigee_deg")) != NULL) {
+            state->mean_arg_perigee_deg = atof(val);
+        } else if ((val = get_value(line, "mean_longitude_ascending_node_deg")) != NULL) {
+            state->mean_raan_deg = atof(val);
+        } else if ((val = get_value(line, "mean_mean_anomaly_deg")) != NULL) {
+            state->mean_mean_anomaly_deg = atof(val);
         }
     }
 

@@ -33,6 +33,7 @@ set(SOURCES
     src/oem.c
     src/propagate.c
     src/state.c
+    src/tle.c
     src/util.c
     third_party/cJSON.c
 )

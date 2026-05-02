@@ -29,11 +29,20 @@ typedef struct opm_state {
     char ref_frame[16];
     char time_system[8];
     utc_time_t epoch;
-    double pos[3];              /* km, ECEF/ITRF */
-    double vel[3];              /* km/s, ECEF/ITRF */
-    double hard_body_radius;    /* m */
-    double ballistic_coef;      /* kg/m^2 */
+    double pos[3];                  /* km, ECEF/ITRF */
+    double vel[3];                  /* km/s, ECEF/ITRF */
+    double hard_body_radius;        /* m */
+    double ballistic_coef;          /* kg/m^2 */
     int sequence_number;
+
+    /* Mean orbital elements (if present in OPM). has_mean_elements = 1 when populated. */
+    int has_mean_elements;
+    double mean_perigee_alt_km;
+    double mean_apogee_alt_km;
+    double mean_inclination_deg;
+    double mean_arg_perigee_deg;
+    double mean_raan_deg;           /* longitude of ascending node */
+    double mean_mean_anomaly_deg;
 } opm_state_t;
 
 /*
