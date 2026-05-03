@@ -111,7 +111,7 @@ int opm_parse(const char *filename, const char *sat_name, opm_state_t *state)
             size_t vlen = strlen(val);
             size_t slen = strlen(sat_name);
             size_t cmplen = vlen < slen ? vlen : slen;
-            if (strncmp(val, sat_name, cmplen) == 0) {
+            if (strncasecmp(val, sat_name, cmplen) == 0) {
                 in_target = 1;
                 found = 1;
                 snprintf(state->object_name, sizeof state->object_name, "%s", val);
