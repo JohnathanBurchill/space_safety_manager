@@ -123,6 +123,18 @@ use `--name <satellite>` to select a specific entry (defaults to `FrontierSat`).
 Position is ECEF in meters, velocity in m/s. The tool converts to km and km/s
 internally and outputs in the ITRF reference frame.
 
+Two optional keys carry the state-vector uncertainty (per-axis ECEF 1-sigma):
+
+```
+  r_ecef_sigma_m: [2.36, 2.34, 2.50]
+  v_ecef_sigma_m_per_s: [0.057, 0.058, 0.057]
+```
+
+When both are present the OEM covariance is built from them (see Orbit
+Propagation); when absent the fixed conservative covariance is used. The
+`gnss_opm` tool in the simple_sat_ops project writes this form straight from a
+satellite GNSS (BESTXYZA) fix.
+
 ## Environment and State
 
 All configuration is stored in `~/.local/state/ssm/` with per-environment
@@ -162,8 +174,16 @@ No atmospheric drag is modelled. This is conservative for conjunction screening:
 the real satellite will be at lower altitude than predicted, so any conjunction
 flags from SpaceX err on the side of caution.
 
-Covariance is a fixed diagonal RTN matrix at each epoch, matching the values
-accepted by the API in testing.
+Covariance: when the OPM supplies per-axis ECEF 1-sigma (`r_ecef_sigma_m` /
+`v_ecef_sigma_m_per_s`), each epoch's RTN covariance is built from it — the
+diagonal ECEF covariance is grown over the time since epoch with a free-drift
+state transition (position variance gains dt^2 * sigma_vel^2, plus a
+dt * sigma_vel^2 position-velocity correlation) and then rotated ECEF->RTN,
+which turns the per-axis sigmas into the correlated R/T/N matrix. The free-drift
+growth ignores gravity-gradient coupling and Earth rotation: a first-order,
+conservative approximation. When the OPM carries no uncertainty, a fixed
+diagonal RTN matrix is used instead, matching the values accepted by the API in
+testing.
 
 ## Usage Reference
 
