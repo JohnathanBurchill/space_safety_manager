@@ -87,6 +87,7 @@ int opm_parse(const char *filename, const char *sat_name, opm_state_t *state)
     int in_target = 0;
     int found = 0;
     int got_pos = 0, got_vel = 0, got_epoch = 0;
+    int got_pos_sigma = 0, got_vel_sigma = 0;
 
     while (fgets(line, sizeof line, f)) {
         trim(line);
@@ -145,6 +146,22 @@ int opm_parse(const char *filename, const char *sat_name, opm_state_t *state)
                 state->vel[2] = v[2] / 1000.0;
                 got_vel = 1;
             }
+        } else if ((val = get_value(line, "r_ecef_sigma_m")) != NULL) {
+            double s[3];
+            if (parse_vec3(val, s) == 0) {
+                state->pos_sigma[0] = s[0] / 1000.0;
+                state->pos_sigma[1] = s[1] / 1000.0;
+                state->pos_sigma[2] = s[2] / 1000.0;
+                got_pos_sigma = 1;
+            }
+        } else if ((val = get_value(line, "v_ecef_sigma_m_per_s")) != NULL) {
+            double s[3];
+            if (parse_vec3(val, s) == 0) {
+                state->vel_sigma[0] = s[0] / 1000.0;
+                state->vel_sigma[1] = s[1] / 1000.0;
+                state->vel_sigma[2] = s[2] / 1000.0;
+                got_vel_sigma = 1;
+            }
         } else if ((val = get_value(line, "sequence_number")) != NULL) {
             state->sequence_number = atoi(val);
         } else if ((val = get_value(line, "hard_body_radius_m")) != NULL) {
@@ -166,6 +183,10 @@ int opm_parse(const char *filename, const char *sat_name, opm_state_t *state)
                 sat_name, got_epoch, got_pos, got_vel);
         return -1;
     }
+
+    /* Covariance is optional: use the supplied 1-sigma only when both the
+       position and velocity uncertainties are present. */
+    state->has_covariance = (got_pos_sigma && got_vel_sigma);
 
     return 0;
 }

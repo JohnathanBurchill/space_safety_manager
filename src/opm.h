@@ -31,6 +31,9 @@ typedef struct opm_state {
     utc_time_t epoch;
     double pos[3];              /* km, ECEF/ITRF */
     double vel[3];              /* km/s, ECEF/ITRF */
+    double pos_sigma[3];        /* km, ECEF/ITRF 1-sigma; valid if has_covariance */
+    double vel_sigma[3];        /* km/s, ECEF/ITRF 1-sigma; valid if has_covariance */
+    int has_covariance;         /* 1 when pos_sigma/vel_sigma were supplied */
     double hard_body_radius;    /* m */
     double ballistic_coef;      /* kg/m^2 */
     int sequence_number;
