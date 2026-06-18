@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 
 static char base_dir[512];   /* ~/.local/state/ssm */
-static char env_dir[512];    /* ~/.local/state/ssm/{production|staging} */
+static char env_dir[1024];   /* ~/.local/state/ssm/{production|staging} */
 static char current_env[32]; /* "production" or "staging" */
 
 static void ensure_dir(const char *path)
