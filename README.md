@@ -2,7 +2,7 @@
 
 A command-line tool for managing satellite registrations and ephemeris uploads
 to the [SpaceX Space Safety](https://docs.space-safety.starlink.com/) conjunction
-screening API. Built for the FrontierSat (CTS-Sat-1) cubesat mission at the
+screening API. Built for the FrontierSat (CTS-SAT-1) cubesat mission at the
 University of Calgary.
 
 ## Features
@@ -61,7 +61,7 @@ Enter your operator ID (UUID from SpaceX): 925d8acb-...
 ### 3. Create a satellite object
 
 ```
-$ ssm --pretty object-create "FrontierSat (CTS-Sat-1)" 0.71
+$ ssm --pretty object-create "FrontierSat (CTS-SAT-1)" 0.71
 ```
 
 The second argument is the hard body radius in meters.
@@ -72,7 +72,7 @@ The second argument is the hard body radius in meters.
 $ ssm --pretty object-show
   #  object_name              id                                    norad_id  hard_body_radius  alive
   -  -----------              --                                    --------  ----------------  -----
-* 1  FrontierSat (CTS-Sat-1)  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  0         0.71              yes
+* 1  FrontierSat (CTS-SAT-1)  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  0         0.71              yes
 ```
 
 The `*` marks the active object. Use `-o N` to switch if you have multiple objects.
